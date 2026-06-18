@@ -6,7 +6,7 @@ export const SignInAction = async () => {
     const { data, error } = await client.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: "http://localhost:3000/auth/v1/callback",
+        redirectTo: "http://localhost:3000/",
       },
     });
 

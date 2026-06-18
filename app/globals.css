@@ -2,25 +2,119 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #181d26;
+
+  --color-ink: #181d26;
+  --color-primary-ink: #181d26;
+  --color-primary-active: #0d1218;
+  --color-body: #333840;
+  --color-muted: #41454d;
+  --color-hairline: #dddddd;
+  --color-border-strong: #9297a0;
+  --color-canvas: #ffffff;
+  --color-surface-soft: #f8fafc;
+  --color-surface-strong: #e0e2e6;
+  --color-surface-dark: #181d26;
+
+  --color-signature-coral: #aa2d00;
+  --color-signature-forest: #0a2e0e;
+  --color-signature-cream: #f5e9d4;
+  --color-signature-peach: #fcab79;
+  --color-signature-mint: #a8d8c4;
+  --color-signature-yellow: #f4d35e;
+  --color-signature-mustard: #d9a441;
+
+  --color-link: #1b61c9;
+  --color-link-active: #1a3866;
+  --color-info: #254fad;
+  --color-info-border: #458fff;
+  --color-success: #006400;
+  --color-success-border: #39bf45;
+  --color-error: #aa2d00;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --color-ink: var(--color-ink);
+  --color-primary-ink: var(--color-primary-ink);
+  --color-primary-active: var(--color-primary-active);
+  --color-body: var(--color-body);
+  --color-muted: var(--color-muted);
+  --color-hairline: var(--color-hairline);
+  --color-border-strong: var(--color-border-strong);
+  --color-canvas: var(--color-canvas);
+  --color-surface-soft: var(--color-surface-soft);
+  --color-surface-strong: var(--color-surface-strong);
+  --color-surface-dark: var(--color-surface-dark);
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-signature-coral: var(--color-signature-coral);
+  --color-signature-forest: var(--color-signature-forest);
+  --color-signature-cream: var(--color-signature-cream);
+  --color-signature-peach: var(--color-signature-peach);
+  --color-signature-mint: var(--color-signature-mint);
+  --color-signature-yellow: var(--color-signature-yellow);
+  --color-signature-mustard: var(--color-signature-mustard);
+
+  --color-link: var(--color-link);
+  --color-link-active: var(--color-link-active);
+  --color-info: var(--color-info);
+  --color-info-border: var(--color-info-border);
+  --color-success: var(--color-success);
+  --color-success-border: var(--color-success-border);
+  --color-error: var(--color-error);
+
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+  --spacing-section: 96px;
+
+  --radius-lg: 12px;
+  --radius-md: 10px;
+  --radius-sm: 6px;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-canvas);
+  color: var(--color-body);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.25;
+}
+
+h1, h2, h3, h4 {
+  color: var(--color-ink);
+}
+
+.btn-primary {
+  @apply bg-primary-ink text-white px-6 py-4 rounded-lg font-medium transition-colors active:bg-primary-active inline-flex items-center justify-center gap-2 disabled:opacity-50 disabled:pointer-events-none;
+}
+
+.btn-secondary {
+  @apply bg-canvas text-ink px-6 py-4 rounded-lg font-medium border border-hairline transition-colors active:bg-surface-soft inline-flex items-center justify-center gap-2 disabled:opacity-50 disabled:pointer-events-none;
+}
+
+.btn-sm {
+  @apply !px-4 !py-2 text-sm;
+}
+
+.input-field {
+  @apply w-full bg-canvas text-ink border border-hairline rounded-sm px-4 py-3 text-sm outline-none focus:border-info-border focus:ring-1 focus:ring-info-border;
+}
+
+.card {
+  @apply bg-canvas border border-hairline rounded-md p-4;
+}
+
+.card-soft {
+  @apply bg-surface-soft border border-hairline rounded-lg p-6;
+}
+
+.page-container {
+  @apply max-w-7xl mx-auto px-6 md:px-12 py-8 md:py-12;
+}
+
+.section-title {
+  @apply text-2xl font-normal text-ink tracking-tight;
+}
+
+.text-link {
+  @apply text-link active:text-link-active;
 }

@@ -15,17 +15,19 @@ export type QueryFetchOptions = {
 export type Question = {
     id: number;
     question: string;
-    options: any; // jsonb
+    options: Record<string, string>; // jsonb
     tags: string[]; // _text
     contributer: string; // uuid
     category_id: number;
     answer: string;
+    explanation?: string | null;
 }
 
 export type User = {
     id: string; // uuid
     name: string | null;
     email: string | null;
+    role?: "user" | "admin";
 }
 
 export type Test = {
