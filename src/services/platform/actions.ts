@@ -237,6 +237,16 @@ export async function saveAnswer(
   return { success: true };
 }
 
+export async function fetchAttemptAnswers(attemptId: number) {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("test_attempt_questions")
+    .select("question_id, selected_answer")
+    .eq("attempt_id", attemptId);
+
+  return { data: data ?? [], error };
+}
+
 export async function submitAttempt(attemptId: number) {
   const { evaluateTest } = await import("../tests/action");
   const result = await evaluateTest(attemptId);
