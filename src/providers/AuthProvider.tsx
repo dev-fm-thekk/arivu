@@ -7,7 +7,6 @@ import { SignInAction, SingOutAction } from "@/src/services/auth/actions";
 
 type AuthContextType = {
   user: User | null;
-  isContributor: boolean;
   loading: boolean;
   signInWithGoogle: () => Promise<void>;
   signOut: () => Promise<void>;
@@ -17,29 +16,13 @@ export const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
-  const [isContributor, setIsContributor] = useState(false);
   const [loading, setLoading] = useState(true);
   const supabase = createClient();
 
   useEffect(() => {
-    const checkContributor = async (userId: string) => {
-      const { data, error } = await supabase
-        .from("users")
-        .select("id")
-        .eq("id", userId)
-        .single();
-      
-      setIsContributor(!!data && !error);
-    };
-
     const getUser = async () => {
       const { data: { user } } = await supabase.auth.getUser();
       setUser(user);
-      if (user) {
-        await checkContributor(user.id);
-      } else {
-        setIsContributor(false);
-      }
       setLoading(false);
     };
 
@@ -49,11 +32,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       async (_event, session) => {
         const newUser = session?.user ?? null;
         setUser(newUser);
-        if (newUser) {
-          await checkContributor(newUser.id);
-        } else {
-          setIsContributor(false);
-        }
         setLoading(false);
       }
     );
@@ -72,7 +50,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, isContributor, loading, signInWithGoogle, signOut }}>
+    <AuthContext.Provider value={{ user, loading, signInWithGoogle, signOut }}>
       {children}
     </AuthContext.Provider>
   );
