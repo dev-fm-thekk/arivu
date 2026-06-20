@@ -1,26 +1,52 @@
-## Table `questions`
-
-### Columns
-
-| Name | Type | Constraints |
-|------|------|-------------|
-| `id` | `int8` | Primary |
-| `question` | `text` |  |
-| `options` | `jsonb` |  |
-| `tags` | `_text` |  |
-| `contributer` | `uuid` |  |
-| `category_id` | `int8` |  |
-| `answer` | `text` |  |
-
-## Table `user`
+## Table `users`
 
 ### Columns
 
 | Name | Type | Constraints |
 |------|------|-------------|
 | `id` | `uuid` | Primary |
-| `name` | `text` |  Nullable |
-| `email` | `text` |  Nullable |
+| `name` | `text` |  |
+| `email` | `text` |  Unique |
+| `created_at` | `timestamptz` |  |
+| `updated_at` | `timestamptz` |  |
+
+## Table `categories`
+
+### Columns
+
+| Name | Type | Constraints |
+|------|------|-------------|
+| `id` | `uuid` | Primary |
+| `name` | `text` |  Unique |
+| `created_at` | `timestamptz` |  |
+| `updated_at` | `timestamptz` |  |
+
+## Table `sub_categories`
+
+### Columns
+
+| Name | Type | Constraints |
+|------|------|-------------|
+| `id` | `uuid` | Primary |
+| `name` | `text` |  |
+| `category_id` | `uuid` |  |
+| `created_at` | `timestamptz` |  |
+| `updated_at` | `timestamptz` |  |
+
+## Table `questions`
+
+### Columns
+
+| Name | Type | Constraints |
+|------|------|-------------|
+| `id` | `uuid` | Primary |
+| `question` | `text` |  |
+| `options` | `jsonb` |  |
+| `answer` | `text` |  |
+| `explanation` | `text` |  Nullable |
+| `sub_category_id` | `uuid` |  |
+| `created_at` | `timestamptz` |  |
+| `updated_at` | `timestamptz` |  |
 
 ## Table `tests`
 
@@ -28,11 +54,16 @@
 
 | Name | Type | Constraints |
 |------|------|-------------|
-| `id` | `int8` | Primary |
-| `time_limit` | `int4` |  |
-| `total_attempts` | `int4` |  |
+| `id` | `uuid` | Primary |
 | `title` | `text` |  |
-| `created_by` | `uuid` |  Nullable |
+| `sections` | `_text` |  |
+| `duration` | `int4` |  |
+| `total_questions` | `int4` |  |
+| `correct_mark` | `numeric` |  |
+| `negative_mark` | `numeric` |  |
+| `total_score` | `numeric` |  |
+| `created_at` | `timestamptz` |  |
+| `updated_at` | `timestamptz` |  |
 
 ## Table `attempts`
 
@@ -40,41 +71,13 @@
 
 | Name | Type | Constraints |
 |------|------|-------------|
-| `id` | `int8` | Primary |
-| `userId` | `uuid` |  |
-| `score` | `numeric` |  |
-| `started_at` | `timestamptz` |  |
-| `test_id` | `int8` |  |
+| `test_id` | `uuid` | Primary |
+| `user_id` | `uuid` | Primary |
+| `status` | `attempt_status` |  |
+| `questions` | `jsonb` |  |
+| `answers` | `jsonb` |  |
 | `submitted_at` | `timestamptz` |  Nullable |
-
-## Table `AptitudeCategories`
-
-### Columns
-
-| Name | Type | Constraints |
-|------|------|-------------|
-| `id` | `int8` | Primary |
-| `slug` | `text` |  Unique |
-| `name` | `text` |  Nullable |
-
-## Table `test_questions`
-
-### Columns
-
-| Name | Type | Constraints |
-|------|------|-------------|
-| `test_id` | `int8` | Primary |
-| `question_id` | `int8` | Primary |
-| `order_index` | `int4` |  Nullable |
-
-## Table `test_attempt_questions`
-
-### Columns
-
-| Name | Type | Constraints |
-|------|------|-------------|
-| `attempt_id` | `int8` | Primary |
-| `question_id` | `int8` | Primary |
-| `selected_answer` | `text` |  Nullable |
-| `is_correct` | `bool` |  Nullable |
+| `score` | `numeric` |  Nullable |
+| `created_at` | `timestamptz` |  |
+| `updated_at` | `timestamptz` |  |
 
