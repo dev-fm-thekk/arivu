@@ -1,88 +1,51 @@
+"use server";
+
 import { createClient } from "@/src/utils/supabase/server";
-import { Question } from "@/src/utils/type";
-import { getAuthenticatedUser } from "../auth/actions";
 
-const authorizeContributor = async (id: string) => {
+export const getQuestionsByCategory = async (categoryId: string) => {
     const supabase = await createClient();
 
     try {
-        const { user, error } = await getAuthenticatedUser();
-
-        if (!user || error) {
-            return {
-                status: "error",
-                error: error ?? "User not authenticated",
-            };
-        }
-
-        const { data: contributor, error: contributorError } =
-            await supabase
-                .from("user")
-                .select("id")
-                .eq("id", id)
-                .single();
-
-        if (contributorError || !contributor) {
-            return {
-                status: "error",
-                error: "Contributor does not exist",
-            };
-        }
-
-        return {
-            status: user.id === id
-                ? "authorized"
-                : "unauthorized",
-        };
-    } catch (err) {
-        console.error(err);
-
-        return {
-            status: "error",
-            error: err,
-        };
-    }
-};
-
-export const createQuestion = async (
-    question: Omit<Question, "id">
-) => {
-    const supabase = await createClient();
-
-    try {
-        const authResult = await authorizeContributor(
-            question.contributer
-        );
-
-        if (authResult.status === "error") {
-            throw new Error(String(authResult.error));
-        }
-
-        if (authResult.status === "unauthorized") {
-            return {
-                status: "failed",
-                reason: "You do not have permission to create questions",
-            };
-        }
-
-        const { error } = await supabase
+        let { data, error } = await supabase
             .from("questions")
-            .insert(question);
-
-        if (error) {
-            throw new Error(error.message);
-        }
+            .select("*, sub_categories!inner(category_id)")
+            .eq("sub_categories.category_id", categoryId);
+            
+        if (error) throw new Error(`db error: ${error.message}`);
+        if (data?.length === 0) return {
+            status: "failed",
+            reason: `questions with category ${categoryId} doesn't exists`
+        };
 
         return {
             status: "success",
-            message: "Question created successfully",
+            body: data
         };
-    } catch (err) {
+    } catch(err: any) {
         console.error(err);
+        return { status: "failed", error: err.message || err };
+    }
+}
+
+export const getQuestionById = async (id: string) => {
+    const supabase = await createClient();
+
+    try {
+        let { data, error } = await supabase.from("questions").select("*").eq("id", id);
+        if (error) throw new Error(`db error: ${error.message}`);
+        if (data?.length === 0 ) return {
+            status: "failed",
+            reason: `question with id ${id} doesn't exists`
+        };
 
         return {
-            status: "failed",
-            error: err,
+            status: "success",
+            payload: data
+        };
+    } catch(err: any) {
+        return {
+            status : "failed",
+            error: err.message || err
         };
     }
-};
+}

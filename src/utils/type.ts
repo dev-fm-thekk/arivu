@@ -1,71 +1,63 @@
-export type Category = {
-    id: number;
-    name: string | null;
-    slug: string;
+export interface UserProfile {
+  id: string;
+  name: string;
+  email: string;
+  created_at?: string;
+  updated_at?: string;
 }
 
-export type QueryFetchOptions = {
-    fetchAll?: boolean;
-    fields?: Array<string>;
-    limit?: number;
-    start?: number;
-    stop?: number;
+export interface Category {
+  id: string;
+  name: string;
+  created_at?: string;
+  updated_at?: string;
 }
 
-export type Question = {
-    id: number;
-    question: string;
-    options: Record<string, string>; // jsonb
-    tags: string[]; // _text
-    contributer: string; // uuid
-    category_id: number;
-    answer: string;
-    explanation?: string | null;
+export interface SubCategory {
+  id: string;
+  name: string;
+  category_id: string;
+  created_at?: string;
+  updated_at?: string;
 }
 
-export type User = {
-    id: string; // uuid
-    name: string | null;
-    email: string | null;
-    role?: "user" | "admin";
+export interface Question {
+  id: string;
+  question: string;
+  options: string[]; // e.g. ["Option A", "Option B", "Option C", "Option D"]
+  answer: string;    // e.g. "A", "B", "C", "D" or the option text. Let's standardize on option index "A", "B", "C", "D" or text.
+  explanation?: string | null;
+  sub_category_id: string;
+  created_at?: string;
+  updated_at?: string;
 }
 
-export type Test = {
-    id: number;
-    time_limit: number;
-    total_attempts: number;
-    title: string;
-    created_by: string | null;
+export interface Test {
+  id: string;
+  title: string;
+  sections: string[]; // text[] in postgres
+  duration: number;   // in minutes
+  total_questions: number;
+  correct_mark: number;
+  negative_mark: number;
+  total_score: number;
+  created_at?: string;
+  updated_at?: string;
 }
 
-export type Attempt = {
-    id: number;
-    userId: string;
-    score: number;
-    started_at: string;
-    test_id: number;
-    submitted_at: string | null;
+export interface Attempt {
+  test_id: string;
+  user_id: string;
+  status: 'in_progress' | 'submitted' | 'expired';
+  questions: Question[]; // jsonb array of Question
+  answers: Record<string, string>; // jsonb object { [questionId]: selectedOption }
+  submitted_at?: string | null;
+  score?: number | null;
+  created_at?: string;
+  updated_at?: string;
 }
 
-export type TestQuestion = {
-    test_id: number;
-    question_id: number;
-    order_index: number | null;
-}
-
-export type TestAttemptQuestion = {
-    attempt_id: number;
-    question_id: number;
-    selected_answer: string | null;
-    is_correct: boolean | null;
-}
-
-export type RandomProportion = {
-    categoryId: number;
-    percent: number;
-}
-
-export type TestConfig = {
-    total: number;
-    proportion: Array<RandomProportion>;
+// Joined representation of an attempt for listing/details
+export interface AttemptWithTest extends Attempt {
+  test: Test;
 }

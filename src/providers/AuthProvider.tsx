@@ -24,7 +24,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const checkContributor = async (userId: string) => {
       const { data, error } = await supabase
-        .from("user")
+        .from("users")
         .select("id")
         .eq("id", userId)
         .single();

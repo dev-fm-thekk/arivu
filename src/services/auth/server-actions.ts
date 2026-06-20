@@ -37,11 +37,10 @@ export async function signUpWithEmail(formData: FormData) {
   }
 
   if (data.user) {
-    await supabase.from("user").upsert({
+    await supabase.from("users").upsert({
       id: data.user.id,
       name,
       email,
-      role: "user",
     });
   }
 
@@ -63,12 +62,12 @@ export async function getCurrentUserProfile() {
   if (!user) return null;
 
   const { data: profile } = await supabase
-    .from("user")
+    .from("users")
     .select("*")
     .eq("id", user.id)
     .single();
 
-  return profile ?? { id: user.id, name: user.user_metadata?.name, email: user.email, role: "user" };
+  return profile ?? { id: user.id, name: user.user_metadata?.name, email: user.email };
 }
 
 export async function updateProfile(formData: FormData) {
@@ -81,7 +80,7 @@ export async function updateProfile(formData: FormData) {
   if (!user) return { error: "Not authenticated" };
 
   const { error } = await supabase
-    .from("user")
+    .from("users")
     .update({ name })
     .eq("id", user.id);
 
@@ -92,20 +91,5 @@ export async function updateProfile(formData: FormData) {
 }
 
 export async function promoteUser(userId: string) {
-  const supabase = await createClient();
-  const profile = await getCurrentUserProfile();
-
-  if (profile?.role !== "admin") {
-    return { error: "Unauthorized" };
-  }
-
-  const { error } = await supabase
-    .from("user")
-    .update({ role: "admin" })
-    .eq("id", userId);
-
-  if (error) return { error: error.message };
-
-  revalidatePath("/admin");
-  return { success: true };
+  return { error: "Not supported" };
 }
