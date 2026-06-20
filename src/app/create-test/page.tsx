@@ -210,45 +210,6 @@ export default function CreateTestPage() {
               {validationErrors.title && <span className="text-xs text-error mt-0.5">{validationErrors.title}</span>}
             </div>
 
-            {/* Sections (Chip Input) */}
-            <div className="flex flex-col gap-1.5">
-              <label htmlFor="sections" className="text-xs font-semibold text-ink uppercase tracking-wider">
-                Sections
-              </label>
-              <p className="text-xs text-muted mb-1">Type section name and press Enter to add</p>
-              <input
-                id="sections"
-                type="text"
-                className="input-field"
-                placeholder="Type and press Enter..."
-                value={sectionInput}
-                onChange={(e) => setSectionInput(e.target.value)}
-                onKeyDown={handleAddSection}
-                disabled={submitting}
-              />
-              
-              {sections.length > 0 && (
-                <div className="flex flex-wrap gap-2 mt-2">
-                  {sections.map((sect) => (
-                    <span 
-                      key={sect} 
-                      className="inline-flex items-center gap-1.5 bg-surface-soft border border-hairline text-ink text-xs font-semibold px-2.5 py-1 rounded-md"
-                    >
-                      {sect}
-                      <button
-                        type="button"
-                        onClick={() => handleRemoveSection(sect)}
-                        className="text-muted hover:text-error focus:outline-none text-xs font-bold leading-none cursor-pointer"
-                        title={`Remove ${sect}`}
-                      >
-                        ×
-                      </button>
-                    </span>
-                  ))}
-                </div>
-              )}
-              {validationErrors.sections && <span className="text-xs text-error mt-0.5">{validationErrors.sections}</span>}
-            </div>
 
             {/* Categories & Subcategories checkbox tree */}
             <div className="flex flex-col gap-1.5">
