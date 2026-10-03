@@ -55,13 +55,3 @@ export async function runTestCases(loc, cmd, testCases) {
 
     return results;
 }
-
-import fs from "fs";
-
-const data = fs.readFileSync("sample.json", "utf-8");
-
-const json = JSON.parse(data);
-
-console.log(
-    await runTestCases("core/test.py", "./test.py", json.testCases)
-)
